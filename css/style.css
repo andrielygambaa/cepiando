@@ -1,0 +1,315 @@
+/* Fontes (opcional): apague esta linha para usar apenas a fonte do sistema */
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700&family=Figtree:wght@400;600;700&display=swap");
+
+:root {
+  color-scheme: light dark;
+
+  --fundo: #e9eef5;
+  --cartao: #ffffff;
+  --texto: #14202e;
+  --texto-suave: #4d5b70;
+  --borda: #d3dbe7;
+  --borda-campo: #7a8aa3;
+  --borda-campo-hover: #55667f;
+  --campo: #ffffff;
+  --campo-leitura: #f3f6fa;
+  --preenchido: #dbe8ff;
+  --placeholder: #66758b;
+
+  --destaque: #1f5fbf;
+  --botao: #1f5fbf;
+  --botao-hover: #174a99;
+  --anel: rgba(31, 95, 191, .28);
+  --postal: #ffc933;
+
+  --erro: #b3261e;
+  --sucesso: #1b7a43;
+
+  --sombra: 0 1px 2px rgba(20, 40, 80, .06), 0 16px 40px -12px rgba(20, 40, 80, .18);
+
+  --fonte-titulo: "Bricolage Grotesque", "Figtree", system-ui, sans-serif;
+  --fonte-corpo: "Figtree", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fundo: #0e1621;
+    --cartao: #172233;
+    --texto: #e8eef7;
+    --texto-suave: #a6b4c8;
+    --borda: #2a3a52;
+    --borda-campo: #6a7e9b;
+    --borda-campo-hover: #8da1bd;
+    --campo: #0f1a2a;
+    --campo-leitura: #131f31;
+    --preenchido: #1d3a66;
+    --placeholder: #8392a8;
+
+    --destaque: #7db0ff;
+    --botao: #2f6fd6;
+    --botao-hover: #1f5fbf;
+    --anel: rgba(125, 176, 255, .35);
+
+    --erro: #ff8f86;
+    --sucesso: #6fd39a;
+
+    --sombra: 0 1px 2px rgba(0, 0, 0, .4), 0 16px 40px -12px rgba(0, 0, 0, .6);
+  }
+}
+
+* { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+::selection { background: var(--anel); }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background: var(--fundo);
+  color: var(--texto);
+  font-family: var(--fonte-corpo);
+  font-size: 1rem;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Cartão: a faixa no topo lembra a borda de um envelope de correio aéreo */
+main {
+  position: relative;
+  overflow: hidden;
+  container-type: inline-size;
+  width: 100%;
+  max-width: 30rem;
+  padding: 2.75rem 2rem 2rem;
+  background: var(--cartao);
+  border: 1px solid var(--borda);
+  border-radius: 14px;
+  box-shadow: var(--sombra);
+}
+
+main::before {
+  --faixa: 2.5rem;
+  --avanco: calc(var(--faixa) * 1.41421356); /* período horizontal das listras a 45° */
+  content: "";
+  position: absolute;
+  top: 0;
+  left: calc(var(--avanco) * -1);
+  width: calc(100% + var(--avanco));
+  height: .5rem;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--botao) 0 .9rem,
+    var(--cartao) .9rem 1.25rem,
+    var(--postal) 1.25rem 2.15rem,
+    var(--cartao) 2.15rem 2.5rem
+  );
+}
+
+/* Enquanto busca o CEP, a faixa corre como carimbo de correio em movimento */
+main:has(#mensagem.carregando)::before {
+  animation: correio .9s linear infinite;
+}
+@keyframes correio { to { transform: translateX(var(--avanco)); } }
+
+h1 {
+  margin: 0 0 .4rem;
+  font-family: var(--fonte-titulo);
+  font-optical-sizing: auto;
+  font-size: clamp(1.6rem, 1.3rem + 1.5vw, 2rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -.02em;
+  text-wrap: balance;
+}
+
+.intro {
+  max-width: 42ch;
+  margin: 0 0 1.75rem;
+  color: var(--texto-suave);
+  text-wrap: pretty;
+}
+
+label {
+  display: block;
+  margin: 1.1rem 0 .35rem;
+  font-size: .92rem;
+  font-weight: 600;
+  transition: color .15s ease;
+}
+
+/* O rótulo do campo em foco acompanha a cor de destaque */
+label:has(+ input:focus-visible),
+label:has(input:focus-visible) { color: var(--destaque); }
+
+input {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: .6rem .85rem;
+  font: inherit;
+  color: var(--texto);
+  caret-color: var(--destaque);
+  background: var(--campo);
+  border: 1px solid var(--borda-campo);
+  border-radius: 8px;
+  transition: border-color .15s ease, background-color .15s ease;
+}
+
+input::placeholder { color: var(--placeholder); font-weight: 400; }
+
+input:hover { border-color: var(--borda-campo-hover); }
+
+input:focus-visible {
+  border-color: var(--destaque);
+  outline: 3px solid var(--anel);
+  outline-offset: 0;
+}
+
+input[readonly] { background: var(--campo-leitura); }
+input:disabled {
+  color: var(--texto-suave);
+  background: var(--campo-leitura);
+  cursor: not-allowed;
+}
+input[aria-invalid="true"],
+input:user-invalid { border-color: var(--erro); }
+
+input:-webkit-autofill {
+  -webkit-text-fill-color: var(--texto);
+  box-shadow: 0 0 0 100px var(--campo) inset;
+}
+
+/* O CEP é o campo principal: maior e com números alinhados */
+.linha-cep { display: flex; gap: .5rem; }
+.linha-cep input {
+  flex: 1;
+  min-width: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  font-variant-numeric: tabular-nums;
+}
+
+button {
+  flex: none;
+  min-height: 2.75rem;
+  padding: 0 1.25rem;
+  font: inherit;
+  font-weight: 700;
+  color: #fff;
+  background: var(--botao);
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color .15s ease, transform .1s ease;
+}
+button:hover:not(:disabled) { background: var(--botao-hover); }
+button:active:not(:disabled) { transform: translateY(1px); }
+button:disabled { opacity: .65; cursor: wait; }
+
+button:focus-visible {
+  outline: 3px solid var(--destaque);
+  outline-offset: 2px;
+}
+
+/* Mensagem de status: ícone + cor, para não depender só da cor */
+#mensagem {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  min-height: 1.5rem;
+  margin: .75rem 0 0;
+  font-size: .95rem;
+  font-weight: 500;
+  text-wrap: pretty;
+}
+#mensagem[hidden] { display: none; }
+#mensagem.erro { color: var(--erro); }
+#mensagem.sucesso { color: var(--sucesso); }
+#mensagem.carregando { color: var(--texto-suave); }
+
+#mensagem.erro,
+#mensagem.sucesso { animation: aparecer .25s ease-out; }
+@keyframes aparecer { from { opacity: 0; transform: translateY(-3px); } }
+
+#mensagem.erro::before,
+#mensagem.sucesso::before {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 50%;
+  font-size: .75rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--cartao);
+}
+#mensagem.erro::before { content: "!"; content: "!" / ""; background: var(--erro); }
+#mensagem.sucesso::before { content: "✓"; content: "✓" / ""; background: var(--sucesso); }
+
+#mensagem.carregando::before {
+  content: "";
+  flex: none;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid var(--borda-campo);
+  border-top-color: var(--destaque);
+  border-radius: 50%;
+  animation: girar .7s linear infinite;
+}
+@keyframes girar { to { transform: rotate(360deg); } }
+
+.duas-colunas { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.duas-colunas > * { min-width: 0; }
+.cidade-uf { grid-template-columns: 1fr 5rem; }
+
+/* UF: sigla centralizada em maiúsculas (último campo de .cidade-uf) */
+.cidade-uf > input:last-child,
+.cidade-uf > :last-child > input {
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+/* Destaque rápido nos campos que acabaram de ser preenchidos pela API */
+input.preenchido { animation: preenchido 1.2s ease-out; }
+@keyframes preenchido {
+  from { background: var(--preenchido); box-shadow: 0 0 0 3px var(--anel); }
+  to   { background: var(--campo);      box-shadow: 0 0 0 0 transparent; }
+}
+
+/* Telas pequenas: o layout responde à largura do cartão, não só da janela */
+@media (max-width: 30rem) {
+  body { padding: 1rem; }
+  main { padding: 2.25rem 1.25rem 1.5rem; }
+}
+@container (max-width: 20rem) {
+  .duas-colunas:not(.cidade-uf) { grid-template-columns: 1fr; gap: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  input.preenchido,
+  #mensagem.erro,
+  #mensagem.sucesso,
+  #mensagem.carregando::before,
+  main:has(#mensagem.carregando)::before { animation: none; }
+  button, input, label { transition: none; }
+}
+
+/* Modo de alto contraste do Windows */
+@media (forced-colors: active) {
+  main { border: 1px solid CanvasText; }
+  button { border: 1px solid ButtonText; }
+  input:focus-visible,
+  button:focus-visible { outline: 3px solid Highlight; }
+}
